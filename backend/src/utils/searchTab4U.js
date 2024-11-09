@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+import axios from 'axios'; //for HTTP requests 
+import * as cheerio from 'cheerio'; //for web scraping - parsing HTML
 
 export const searchTab4U = async (query) => {
     try {

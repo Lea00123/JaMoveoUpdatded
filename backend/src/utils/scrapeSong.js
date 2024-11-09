@@ -3,10 +3,10 @@ import * as cheerio from 'cheerio';
 
 // Align the chords and lyrics
 const processRow = (chordRow, lyricRow) => {
-  const lyrics = lyricRow.trim().split(/\s+/);
+  const lyrics = lyricRow.trim().split(' ');
 
   // Regular expressions to handle spaces
-  const chordMatches = [...chordRow.matchAll(/(\s*)([^\s]+)/g)];
+  const chordMatches = [...chordRow.matchAll(/(\s*)([^\s]+)/g)]; //first pattern spaces, second pattern non-spaces
 
   let result = []; 
   let chordIndex = 0; 
@@ -18,7 +18,7 @@ const processRow = (chordRow, lyricRow) => {
 
     // Get the chord for this word
     while (chordIndex < chordMatches.length) {
-      const [, spaces, chord] = chordMatches[chordIndex]; 
+      const [/*{fullmatch}*/, spaces, chord] = chordMatches[chordIndex]; 
       const chordPosition = chordRow.indexOf(spaces + chord, lyricsPosition); 
 
       // If the chord fits, associate it with the word
@@ -27,7 +27,7 @@ const processRow = (chordRow, lyricRow) => {
         chordIndex++; 
       } else {
         break; 
-      }
+      } 
     }
 
     if (chordForThisWord) {

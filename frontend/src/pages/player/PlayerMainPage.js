@@ -8,10 +8,8 @@ const PlayerMainPage = ({ onSelectSong }) => {
             onSelectSong(songData);
         };
 
-        // Listen for the 'songSelected' event from the server
         socket.on('songSelected', handleSongSelected);
 
-        // Clean up the socket connection
         return () => {
             socket.off('songSelected', handleSongSelected);
         };

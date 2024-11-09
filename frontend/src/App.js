@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, useEffect, useCallback } from 'react';
 import AppRoutes from './routes/AppRoutes'; 
 import { useNavigate } from 'react-router-dom';
@@ -10,30 +9,31 @@ const App = () => {
     const [results, setResults] = useState([]);
     const { userRole } = useAuth();
 
+    const navigateByRole = useCallback((role) => {
+        role === 'admin' ? navigate('/adminmain') : navigate('/playermain');
+    }, [navigate]);
+
+    const handleSearchResults = useCallback((data) => {
+        setResults(data);
+        navigate('/adminresults');
+    }, [navigate]);
+
     useEffect(() => {
-        socket.on('searchResults', (data) => {
-            setResults(data);
-            navigate('/adminresults');
-        });
-
-        const quitListener = () => {
-            userRole === 'admin' ? navigate('/adminmain') : navigate('/playermain');
-        };
-
-        socket.on('quit', quitListener);
+        socket.on('searchResults', handleSearchResults);
+        socket.on('quit', () => navigateByRole(userRole));
 
         return () => {
-            socket.off('searchResults');
-            socket.off('quit', quitListener);
+            socket.off('searchResults', handleSearchResults);
+            socket.off('quit');
         };
-    }, [navigate, userRole]);
+    }, [navigateByRole, userRole, handleSearchResults]); 
 
     const handleSignupSuccess = () => {
         navigate('/login'); 
     };
 
     const handleLoginSuccess = (role) => {
-        role === 'admin' ? navigate('/adminmain') : navigate('/playermain');
+        navigateByRole(role);
     };
 
     const handleSelectSong = useCallback((song) => {
